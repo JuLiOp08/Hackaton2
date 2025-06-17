@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 interface ExpenseFormState {
   description: string;
@@ -23,7 +24,7 @@ const AddExpense: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await api.post('/expenses', formData);
+      const response = await axios.post('/expenses', formData);
       console.log('Expense added successfully:', response.data);
       // Optionally, reset form or navigate
       setFormData({ description: '', amount: 0, category: '', date: '' });
