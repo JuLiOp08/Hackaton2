@@ -11,7 +11,7 @@ export function useSignup() {
     role: string;
   }) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/auth/signup`, user);
+      const response = await axios.post(`${BACKEND_URL}/authentication/signup`, user);
       return { success: true, token: response.data.token };
     } catch {
       return { success: false, error: "Error al registrar el usuario" };

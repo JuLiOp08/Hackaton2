@@ -6,8 +6,6 @@ function Navbar() {
       <span className="text-3xl font-bold text-black mr-8 justify-start">STUDENTS</span>
       <Link to="/" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Login</Link>
       <Link to="/signup" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Registro</Link>
-      <Link to="/student_form" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Crear Estudiante</Link>
-      <Link to="/get_students" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Ver Estudiantes</Link>
 
     </nav>
   );
