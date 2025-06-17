@@ -80,36 +80,4 @@ export function useGetAllStudents() {
   return { getAllStudents };
 }
 
-export function useGetStudentById() {
-  const { token } = useToken();
-  const getStudentById = async (id: string) => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/student/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return { success: true, student: response.data };
-    } catch {
-      return { success: false, error: "Error al obtener el estudiante" };
-    }
-  };
-  return { getStudentById };
-}
 
-export function deleteStudent() {
-  const { token } = useToken();
-  const deleteStudentById = async (id: string) => {
-    try {
-      await axios.delete(`${BACKEND_URL}/student/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return { success: true };
-    } catch {
-      return { success: false, error: "Error al eliminar el estudiante" };
-    }
-  };
-  return { deleteStudentById };
-}

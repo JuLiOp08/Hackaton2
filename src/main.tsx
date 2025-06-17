@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import "./styles/index.css";
 import Login from "./pages/Login.tsx";
 import { TokenProvider } from "./contexts/TokenContext.tsx";
+import GetStudents from "./pages/GetStudents.tsx";
 import StudentForm from "./pages/StudentForm.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Signup from "./pages/Signup.tsx";
@@ -23,6 +24,14 @@ createRoot(document.getElementById("root")!).render(
               element={
                 <ProtectedRoute>
                   <StudentForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/get_students"
+              element={
+                <ProtectedRoute>
+                  <GetStudents />
                 </ProtectedRoute>
               }
             />
