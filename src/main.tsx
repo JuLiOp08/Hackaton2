@@ -4,8 +4,6 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import "./styles/index.css";
 import Login from "./pages/Login.tsx";
 import { TokenProvider } from "./contexts/TokenContext.tsx";
-import GetStudents from "./pages/GetStudents.tsx";
-import StudentForm from "./pages/StudentForm.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Signup from "./pages/Signup.tsx";
 import Navbar from "./components/Navbar";
@@ -19,22 +17,6 @@ createRoot(document.getElementById("root")!).render(
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/student_form"
-              element={
-                <ProtectedRoute>
-                  <StudentForm />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/get_students"
-              element={
-                <ProtectedRoute>
-                  <GetStudents />
-                </ProtectedRoute>
-              }
-            />
           </Routes>
         </div>
       </BrowserRouter>
