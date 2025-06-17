@@ -16,13 +16,15 @@ function Login() {
     const email = formData.get("email") as string;
     const passwd = formData.get("password") as string;
 
-    const result = await login({ email, passwd });
+    //console.log("Logging in with:", { email, passwd });
 
-    if (result.success) {
+    const result = await login({ email, passwd });
+    console.log("Login result:", result);
+    if (result) {
       saveToken(result.token);
       navigate("/student_form");
     } else {
-      alert(result.error);
+      alert(result);
     }
   }
 

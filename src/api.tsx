@@ -22,8 +22,11 @@ export function useLogin() {
   const login = async (user: { email: string; passwd: string }) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/authentication/login`, user);
+
+      console.log("Login response:", response.data); // me dice que todo bien
+
       return { success: true, token: response.data.data.token };
-    } catch (error: any) {
+    } catch (error) {
       return { success: false, error: "Usuario o contraseña incorrecta" };
     }
   };
