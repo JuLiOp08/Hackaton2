@@ -1,19 +1,16 @@
 import axios from "axios";
-import { useToken } from "./contexts/TokenContext";
 
-const BACKEND_URL = "http://localhost:8080";
+const BACKEND_URL = "http://198.211.105.95:8080";
 
 export function useSignup() {
   const register = async (user: {
     email: string;
-    password: string;
-    firstname: string;
-    role: string;
+    passwd: string;
   }) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/authentication/register`, user);
-      return { success: true, token: response.data.token };
-    } catch {
+      return { success: true };
+    } catch (error: any) {
       return { success: false, error: "Error al registrar el usuario" };
     }
   };
@@ -22,11 +19,11 @@ export function useSignup() {
 }
 
 export function useLogin() {
-  const login = async (user: { email: string; password: string }) => {
+  const login = async (user: { email: string; passwd: string }) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/authentication/login`, user);
-      return { success: true, token: response.data.token };
-    } catch {
+      return { success: true, token: response.data.data.token };
+    } catch (error: any) {
       return { success: false, error: "Usuario o contraseña incorrecta" };
     }
   };

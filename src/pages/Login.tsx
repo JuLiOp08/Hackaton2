@@ -14,9 +14,9 @@ function Login() {
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const passwd = formData.get("password") as string;
 
-    const result = await login({ email, password });
+    const result = await login({ email, passwd });
 
     if (result.success) {
       saveToken(result.token);
