@@ -11,7 +11,7 @@ export function useSignup() {
     role: string;
   }) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/auth/signup`, user);
+      const response = await axios.post(`${BACKEND_URL}/authentication/signup`, user);
       return { success: true, token: response.data.token };
     } catch {
       return { success: false, error: "Error al registrar el usuario" };
@@ -80,36 +80,4 @@ export function useGetAllStudents() {
   return { getAllStudents };
 }
 
-export function useGetStudentById() {
-  const { token } = useToken();
-  const getStudentById = async (id: string) => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/student/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return { success: true, student: response.data };
-    } catch {
-      return { success: false, error: "Error al obtener el estudiante" };
-    }
-  };
-  return { getStudentById };
-}
 
-export function deleteStudent() {
-  const { token } = useToken();
-  const deleteStudentById = async (id: string) => {
-    try {
-      await axios.delete(`${BACKEND_URL}/student/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return { success: true };
-    } catch {
-      return { success: false, error: "Error al eliminar el estudiante" };
-    }
-  };
-  return { deleteStudentById };
-}
