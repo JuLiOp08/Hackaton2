@@ -21,7 +21,13 @@ export default function ExpensesSummary() {
   }, [token]);
 
   if (error) return <div>Error: {error}</div>;
-  if (!summary) return <div>Cargando resumen...</div>;
+  if (!summary)
+    return (
+      <div className="flex flex-col items-center mt-8 text-lg text-white">
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-blue-500 mb-4" />
+        Cargando resumen...
+      </div>
+    );
 
   return (
     <div>

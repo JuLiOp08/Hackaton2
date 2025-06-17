@@ -47,6 +47,27 @@ export async function getExpensesSummary(token: string) {
   }
 }
 
+export async function getExpensesDetail(
+  token: string,
+  year: number,
+  month: number,
+  categoryId: number
+) {
+  try {
+    const response = await axios.get(
+      `http://198.211.105.95:8080/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return { success: false, error: "No se pudo obtener el detalle de gastos" };
+  }
+}
+
 
 
 

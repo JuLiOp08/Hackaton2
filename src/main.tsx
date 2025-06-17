@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Signup from "./pages/Signup.tsx";
 import Navbar from "./components/Navbar";
 import ExpensesSummary from "./pages/ExpensesSumary.tsx";
+import ExpensesDetail from "./pages/ExpensesDetail";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TokenProvider>
@@ -22,6 +23,14 @@ createRoot(document.getElementById("root")!).render(
               element={
                 <ProtectedRoute>
                   <ExpensesSummary />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/expenses_detail"
+              element={
+                <ProtectedRoute>
+                  <ExpensesDetail />
                 </ProtectedRoute>
               }
             />
