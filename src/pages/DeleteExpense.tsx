@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../api'; // Assuming you have an api service
+import axios from 'axios';
 
 interface Expense {
   id: string;
@@ -19,7 +19,7 @@ const DeleteExpense: React.FC = () => {
     const fetchExpenses = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/expenses');
+        const response = await axios.get('/expenses');
         setExpenses(response.data);
       } catch (err) {
         setError('Error fetching expenses.');
@@ -39,7 +39,7 @@ const DeleteExpense: React.FC = () => {
     }
 
     try {
-      await api.delete(`/expenses/${selectedExpenseId}`);
+      await axios.delete(`/expenses/${selectedExpenseId}`);
       setExpenses(expenses.filter(exp => exp.id !== selectedExpenseId));
       setSelectedExpenseId(null);
     } catch (err) {
