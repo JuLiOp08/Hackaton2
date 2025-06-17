@@ -13,6 +13,11 @@ export default function Signup() {
     e.preventDefault();
     const result = await register({ email, password, firstname, role });
 
+    if (password.length < 12) {
+      alert("La contraseña debe tener al menos 12 caracteres");
+      return;
+    }
+
     if (result.success) {
       alert("Usuario registrado exitosamente");
       setEmail("");
