@@ -7,7 +7,7 @@ import { TokenProvider } from "./contexts/TokenContext.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Signup from "./pages/Signup.tsx";
 import Navbar from "./components/Navbar";
-
+import ExpensesSummary from "./pages/ExpensesSumary.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TokenProvider>
@@ -17,6 +17,14 @@ createRoot(document.getElementById("root")!).render(
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route
+              path="/expenses_summary"
+              element={
+                <ProtectedRoute>
+                  <ExpensesSummary />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </BrowserRouter>

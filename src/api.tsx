@@ -9,7 +9,7 @@ export function useSignup() {
   }) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/authentication/register`, user);
-      return { success: true };
+      return { success: true, token: response.data.token };
     } catch (error: any) {
       return { success: false, error: "Error al registrar el usuario" };
     }
@@ -29,6 +29,22 @@ export function useLogin() {
   };
 
   return { login };
+}
+
+export async function getExpensesSummary(token: string) {
+  try {
+    const response = await axios.get(
+      "http://198.211.105.95:8080/expenses_summary",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return { success: false, error: "No se pudo obtener el resumen de gastos" };
+  }
 }
 
 
