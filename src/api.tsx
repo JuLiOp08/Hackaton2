@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "http://198.211.105.95:8080";
+export const BACKEND_URL = "http://198.211.105.95:8080";
 
 export function useSignup() {
   const register = async (user: {
@@ -70,7 +70,6 @@ export async function getExpensesDetail(
     return { success: false, error: "No se pudo obtener el detalle de gastos" };
   }
 }
-
 
 
 
