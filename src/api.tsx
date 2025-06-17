@@ -1,19 +1,16 @@
 import axios from "axios";
-import { useToken } from "./contexts/TokenContext";
 
-const BACKEND_URL = "http://localhost:8080";
+const BACKEND_URL = "http://198.211.105.95:8080";
 
 export function useSignup() {
   const register = async (user: {
     email: string;
-    password: string;
-    firstname: string;
-    role: string;
+    passwd: string;
   }) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/authentication/signup`, user);
+      const response = await axios.post(`${BACKEND_URL}/authentication/register`, user);
       return { success: true, token: response.data.token };
-    } catch {
+    } catch (error: any) {
       return { success: false, error: "Error al registrar el usuario" };
     }
   };
@@ -22,11 +19,11 @@ export function useSignup() {
 }
 
 export function useLogin() {
-  const login = async (user: { email: string; password: string }) => {
+  const login = async (user: { email: string; passwd: string }) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/auth/login`, user);
-      return { success: true, token: response.data.token };
-    } catch {
+      const response = await axios.post(`${BACKEND_URL}/authentication/login`, user);
+      return { success: true, token: response.data.data.token };
+    } catch (error: any) {
       return { success: false, error: "Usuario o contraseña incorrecta" };
     }
   };
@@ -34,50 +31,45 @@ export function useLogin() {
   return { login };
 }
 
-type Student = {
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-  age: number;
-  description: string;
-  password: string;
-};
-
-export function useCreateStudent() {
-  const { token } = useToken();
-
-  const createStudent = async (student: Student) => {
-    try {
-      const response = await axios.post(`${BACKEND_URL}/student`, student, {
+export async function getExpensesSummary(token: string) {
+  try {
+    const response = await axios.get(
+      "http://198.211.105.95:8080/expenses_summary",
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      return { success: true, student: response.data };
-    } catch {
-      return { success: false, error: "Error al crear el estudiante" };
-    }
-  };
-
-  return { createStudent };
+      }
+    );
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return { success: false, error: "No se pudo obtener el resumen de gastos" };
+  }
 }
 
-export function useGetAllStudents() {
-  const { token } = useToken();
-  const getAllStudents = async () => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/student`, {
+export async function getExpensesDetail(
+  token: string,
+  year: number,
+  month: number,
+  categoryId: number
+) {
+  try {
+    const response = await axios.get(
+      `http://198.211.105.95:8080/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      return { success: true, students: response.data };
-    } catch {
-      return { success: false, error: "Error al obtener los estudiantes" };
-    }
-  };
-  return { getAllStudents };
+      }
+    );
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return { success: false, error: "No se pudo obtener el detalle de gastos" };
+  }
 }
+
+
+
+
 
 

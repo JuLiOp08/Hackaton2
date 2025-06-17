@@ -4,12 +4,11 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import "./styles/index.css";
 import Login from "./pages/Login.tsx";
 import { TokenProvider } from "./contexts/TokenContext.tsx";
-import GetStudents from "./pages/GetStudents.tsx";
-import StudentForm from "./pages/StudentForm.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Signup from "./pages/Signup.tsx";
 import Navbar from "./components/Navbar";
-
+import ExpensesSummary from "./pages/ExpensesSumary.tsx";
+import ExpensesDetail from "./pages/ExpensesDetail";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TokenProvider>
@@ -20,18 +19,18 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route
-              path="/student_form"
+              path="/expenses_summary"
               element={
                 <ProtectedRoute>
-                  <StudentForm />
+                  <ExpensesSummary />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/get_students"
+              path="/expenses_detail"
               element={
                 <ProtectedRoute>
-                  <GetStudents />
+                  <ExpensesDetail />
                 </ProtectedRoute>
               }
             />
