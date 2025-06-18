@@ -9,6 +9,9 @@ import Signup from "./pages/Signup.tsx";
 import Navbar from "./components/Navbar";
 import ExpensesSummary from "./pages/ExpensesSumary.tsx";
 import ExpensesDetail from "./pages/ExpensesDetail";
+import AddExpense from "./pages/AddExpense.tsx";
+import DeleteExpense from "./pages/DeleteExpense.tsx";
+import Goals from "./pages/SavingGoals.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -34,13 +37,25 @@ createRoot(document.getElementById("root")!).render(
                   <ExpensesDetail />
                 </ProtectedRoute>
               }
-            />
+            />            
             <Route
-              path="/expenses_detail"
+              path="/add_expense"
               element={
                 <ProtectedRoute>
-                  <ExpensesDetail />
+                  <AddExpense />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/delete_expense"
+              element={
+                <ProtectedRoute>
+                  <DeleteExpense />
+                </ProtectedRoute>
+              }
+            />
+             <Route path="/saving_goals" element={
+                <ProtectedRoute><Goals/></ProtectedRoute>
               }
             />
           </Routes>
