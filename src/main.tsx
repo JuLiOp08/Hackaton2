@@ -9,12 +9,13 @@ import Signup from "./pages/Signup.tsx";
 import Navbar from "./components/Navbar";
 import ExpensesSummary from "./pages/ExpensesSumary.tsx";
 import ExpensesDetail from "./pages/ExpensesDetail";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TokenProvider>
       <BrowserRouter>
         <Navbar />
-        <div className="pt-16"> {}
+        <div className="pt-16">
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
@@ -23,6 +24,14 @@ createRoot(document.getElementById("root")!).render(
               element={
                 <ProtectedRoute>
                   <ExpensesSummary />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/expenses_detail"
+              element={
+                <ProtectedRoute>
+                  <ExpensesDetail />
                 </ProtectedRoute>
               }
             />

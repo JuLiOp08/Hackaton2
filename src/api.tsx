@@ -25,7 +25,7 @@ export function useLogin() {
 
       console.log("Login response:", response.data); // me dice que todo bien
 
-      return { success: true, token: response.data.data.token };
+      return { success: true, token: response.data.result.token };
     } catch (error) {
       return { success: false, error: "Usuario o contraseña incorrecta" };
     }
@@ -44,6 +44,7 @@ export async function getExpensesSummary(token: string) {
         },
       }
     );
+    console.log(response.data.token)
     return { success: true, data: response.data };
   } catch (error: any) {
     return { success: false, error: "No se pudo obtener el resumen de gastos" };

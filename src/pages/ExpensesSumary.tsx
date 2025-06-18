@@ -10,6 +10,7 @@ export default function ExpensesSummary() {
   useEffect(() => {
     async function fetchSummary() {
       if (!token) return;
+      console.log("Fetching expenses summary with token:", token);
       const result = await getExpensesSummary(token);
       if (result.success) {
         setSummary(result.data);

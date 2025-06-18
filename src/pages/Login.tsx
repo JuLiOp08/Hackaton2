@@ -19,10 +19,10 @@ function Login() {
     //console.log("Logging in with:", { email, passwd });
 
     const result = await login({ email, passwd });
-    console.log("Login result:", result);
+    console.log("Login result despues del login:", result);
     if (result) {
       saveToken(result.token);
-      navigate("/student_form");
+      navigate("/expenses_summary");
     } else {
       alert(result);
     }
