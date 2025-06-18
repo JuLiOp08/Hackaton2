@@ -7,6 +7,7 @@ function Navbar() {
       <Link to="/" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Login</Link>
       <Link to="/signup" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Registro</Link>
       <Link to="/expenses_summary" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Expenses_Sumary</Link>
+      <Link to="/expenses_detail" className="px-3 py-1 rounded hover:bg-gray-300 font-semibold">Expenses_Detail</Link>
 
     </nav>
   );
