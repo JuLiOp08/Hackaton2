@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../api';
 
 interface Goal {
   id: number;
@@ -13,8 +14,7 @@ const Goals: React.FC = () => {
   const [newGoal, setNewGoal] = useState({ month: '', year: '', amount: '' });
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
-  const API_BASE_URL = 'http://198.211.105.95:8080'; // Replace with your API base URL
-
+  
   useEffect(() => {
     fetchGoals();
   }, []);
@@ -22,7 +22,7 @@ const Goals: React.FC = () => {
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
-      const response = await axios.get<Goal[]>(`${API_BASE_URL}/goals`, {
+      const response = await axios.get<Goal[]>(`${BACKEND_URL}/goals`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,7 +47,7 @@ const Goals: React.FC = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post<Goal>(`${API_BASE_URL}/goals`, newGoal, {
+      const response = await axios.post<Goal>(`${BACKEND_URL}/goals`, newGoal, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +70,7 @@ const Goals: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.patch<Goal>(`${API_BASE_URL}/goals/${editingGoal.id}`, editingGoal, {
+      const response = await axios.patch<Goal>(`${BACKEND_URL}/goals/${editingGoal.id}`, editingGoal, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

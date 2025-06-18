@@ -3,10 +3,13 @@ import axios from 'axios';
 
 interface Expense {
   id: string;
-  description: string;
+  expenseCategory: {
+    id: number;
+    name: string;
+  };
+  year: number;
+  month: number;
   amount: number;
-  category: string;
-  date: string;
 }
 
 const DeleteExpense: React.FC = () => {
@@ -64,8 +67,7 @@ const DeleteExpense: React.FC = () => {
       ) : (
         <ul>
           {expenses.map(expense => (
-            <li key={expense.id}>
-              {expense.description} - ${expense.amount.toFixed(2)} - {expense.date}
+            <li key={expense.id}> ${expense.amount.toFixed(2)} - {expense.month} - {expense.year}
               <button onClick={() => setSelectedExpenseId(expense.id)}>
                 {selectedExpenseId === expense.id ? 'Selected' : 'Select'}
               </button>
