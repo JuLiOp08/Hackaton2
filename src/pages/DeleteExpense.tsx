@@ -42,7 +42,7 @@ const DeleteExpense: React.FC = () => {
     }
 
     try {
-      await axios.delete(`/expenses/${selectedExpenseId}`);
+      await axios.delete(`/expenses/${selectedExpenseId}`, {}); // Ensure no request body is sent
       setExpenses(expenses.filter(exp => exp.id !== selectedExpenseId));
       setSelectedExpenseId(null);
     } catch (err) {
