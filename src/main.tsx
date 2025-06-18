@@ -11,7 +11,7 @@ import ExpensesSummary from "./pages/ExpensesSumary.tsx";
 import ExpensesDetail from "./pages/ExpensesDetail";
 import AddExpense from "./pages/AddExpense.tsx";
 import DeleteExpense from "./pages/DeleteExpense.tsx";
-import Goals from "./pages/SavingGoals.tsx";
+
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -52,10 +52,6 @@ createRoot(document.getElementById("root")!).render(
                 <ProtectedRoute>
                   <DeleteExpense />
                 </ProtectedRoute>
-              }
-            />
-             <Route path="/saving_goals" element={
-                <ProtectedRoute><Goals/></ProtectedRoute>
               }
             />
           </Routes>
