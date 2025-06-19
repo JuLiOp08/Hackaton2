@@ -39,7 +39,7 @@ createRoot(document.getElementById("root")!).render(
               }
             />            
             <Route
-              path={`/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`}
+              path="/expenses/detail/:year/:month/:categoryId"
               element={
                 <ProtectedRoute>
                   <AddExpense />
@@ -47,7 +47,7 @@ createRoot(document.getElementById("root")!).render(
               }
             />
             <Route
-              path={`/expenses/${id}`}
+              path="/expenses/:id"
               element={
                 <ProtectedRoute>
                   <DeleteExpense />

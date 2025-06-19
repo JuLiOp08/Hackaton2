@@ -96,6 +96,7 @@ export async function addExpense(
   }
 ) {
   try {
+    const { year, month, categoryId } = expense;
     const response = await axios.post(
       `${BACKEND_URL}/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
       expense,
