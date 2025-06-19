@@ -111,7 +111,7 @@ export default function ExpensesDetail() {
 
   return (
     <div className="container mx-auto p-4 max-w-6xl">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Detalle de Gastos</h2>
+      <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Detalle de Gastos</h2>
       
       {/* Filtros */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-6">
@@ -124,10 +124,10 @@ export default function ExpensesDetail() {
             <select
               value={year}
               onChange={(e) => setYear(Number(e.target.value))}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
             >
               {Array.from({ length: 10 }, (_, i) => currentDate.getFullYear() - i).map((y) => (
-                <option key={y} value={y}>{y}</option>
+              <option key={y} value={y}>{y}</option>
               ))}
             </select>
           </div>
@@ -140,7 +140,7 @@ export default function ExpensesDetail() {
             <select
               value={month}
               onChange={(e) => setMonth(Number(e.target.value))}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
             >
               {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                 <option key={m} value={m}>
@@ -160,7 +160,7 @@ export default function ExpensesDetail() {
               value={categoryInput}
               onChange={handleCategoryChange}
               placeholder="Escribe o selecciona una categoría"
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
             />
             {categoryInput && !selectedCategory && filteredCategories.length > 0 && (
               <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">

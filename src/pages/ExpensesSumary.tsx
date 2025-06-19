@@ -78,8 +78,10 @@ export default function ExpensesSummary() {
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-white mb-6">Resumen de Gastos</h2>
-      
+      <h2 className="text-2xl font-bold text-white mb-6" style={{ textShadow: "2px 2px 6px black" }}>
+        Resumen de Gastos
+      </h2>
+
       <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
