@@ -24,12 +24,17 @@ export default function ExpensesDetail() {
     const mockCategories = [
       { id: 1, name: "Alimentación" },
       { id: 2, name: "Transporte" },
-      { id: 3, name: "Entretenimiento" },
+      { id: 3, name: "Vivienda" },
       { id: 4, name: "Tecnología" },
       { id: 5, name: "Hogar" },
       { id: 6, name: "Salud" },
-      { id: 7, name: "Educación" },
-      { id: 8, name: "Ropa" },
+      { id: 7, name: "Entretenimiento" },
+      { id: 8, name: "Ropa y calzado" },
+      { id: 10, name: "Impuestos" },
+      { id: 14, name: "Seguros" },
+      { id: 18, name: "Mantenimiento del hogar" },
+      { id: 19, name: "Bebidas y snacks" },
+      { id: 20, name: "Otros gastos personales" },
     ];
     setCategories(mockCategories);
   }, []);
@@ -57,23 +62,21 @@ export default function ExpensesDetail() {
   // Buscar detalles
   const fetchDetails = async () => {
     if (!token) return;
-    
     setIsLoading(true);
     setError(null);
-    
     try {
-      // Si no hay categoría seleccionada pero hay texto, buscar por nombre
-      const categoryParam = selectedCategory 
-        ? selectedCategory.id 
-        : categoryInput;
-      
+      // Solo buscar si hay categoría seleccionada (por id)
+      if (!selectedCategory) {
+        setError("Selecciona una categoría válida");
+        setIsLoading(false);
+        return;
+      }
       const result = await getExpensesDetail(
         token, 
         year, 
         month, 
-        categoryParam
+        selectedCategory.id // Usar categoryId
       );
-      
       if (result.success) {
         setDetails(Array.isArray(result.data) ? result.data : [result.data]);
       } else {
@@ -91,7 +94,7 @@ export default function ExpensesDetail() {
   // Validación del formulario
   const isFormValid = year > 2000 && year < 2100 && 
                      month >= 1 && month <= 12 && 
-                     (selectedCategory || categoryInput.trim());
+                     selectedCategory;
 
   // Formateadores
   const formatDate = (dateString: string) => {
@@ -182,7 +185,7 @@ export default function ExpensesDetail() {
             <button
               onClick={fetchDetails}
               disabled={!isFormValid || isLoading}
-              className={`w-full py-2 px-4 rounded-md text-white ${isFormValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'}`}
+              className={`w-full py-2 px-4 rounded-md text-gray-700 ${isFormValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'}`}
             >
               {isLoading ? 'Buscando...' : 'Buscar Gastos'}
             </button>
@@ -212,36 +215,45 @@ export default function ExpensesDetail() {
               en {new Date(year, month - 1).toLocaleString('es-ES', { month: 'long', year: 'numeric' })}
             </h3>
           </div>
-          
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-100">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    #
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Fecha
                   </th>
-                  
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Categoría
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Monto
                   </th>
-                  
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {details.map((expense) => (
+                {details.map((expense, idx) => (
                   <tr key={expense.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{idx + 1}</div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {formatDate(expense.date)}
                       </div>
                     </td>
-              
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {expense.category?.name}
+                      </div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className={`text-sm font-medium ${expense.amount < 0 ? 'text-red-600' : 'text-green-600'}`}>
                         {formatCurrency(expense.amount)}
                       </div>
                     </td>
-                    
                   </tr>
                 ))}
               </tbody>
