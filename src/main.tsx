@@ -21,18 +21,23 @@ createRoot(document.getElementById("root")!).render(
         <Navbar />
         <div className="pt-16">
           <Routes>
-            <Route path="/" element={<Login />} />
+ <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route
-              path="/expenses_summary"
+ path="/"
               element={
                 <ProtectedRoute>
                   <ExpensesSummary />
                 </ProtectedRoute>
               }
             />
+ <Route path="/summary" element={
+ <ProtectedRoute>
+ <ExpensesSummary />
+ </ProtectedRoute>
+ } />
             <Route
-              path="/expenses_detail"
+ path="/expenses/:id"
               element={
                 <ProtectedRoute>
                   <ExpensesDetail />
@@ -40,21 +45,14 @@ createRoot(document.getElementById("root")!).render(
               }
             />            
             <Route
-              path="/add_expense"
+ path="/add-expense"
               element={
                 <ProtectedRoute>
                   <AddExpense />
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/delete_expense"
-              element={
-                <ProtectedRoute>
-                  <DeleteExpense />
-                </ProtectedRoute>
-              }
-            />
+ <Route path="/delete-expense" element={<ProtectedRoute><DeleteExpense /></ProtectedRoute>} />
             <Route
               path="/expense_categories"
               element={

@@ -60,14 +60,11 @@ export async function getExpensesSummary(token: string) {
 }
 
 export async function getExpensesDetail(
-  token: string,
-  year: number,
-  month: number,
-  categoryId: number
+  token: string, 
+  expenseId: string
 ) {
   try {
-    const response = await axios.get(
-      `${BACKEND_URL}/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
+    const response = await axios.get(`${BACKEND_URL}/expenses/${expenseId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
