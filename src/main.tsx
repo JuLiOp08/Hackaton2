@@ -11,6 +11,7 @@ import ExpensesSummary from "./pages/ExpensesSumary.tsx";
 import ExpensesDetail from "./pages/ExpensesDetail";
 import AddExpense from "./pages/AddExpense.tsx";
 import DeleteExpense from "./pages/DeleteExpense.tsx";
+import ExpenseCategories from "./pages/ExpenseCategories.tsx";
 
 
 createRoot(document.getElementById("root")!).render(
@@ -53,6 +54,14 @@ createRoot(document.getElementById("root")!).render(
                   <DeleteExpense />
                 </ProtectedRoute>
               }
+            />
+            <Route
+              path="/expense_categories"
+              element={
+ <ProtectedRoute>
+ <ExpenseCategories />
+ </ProtectedRoute>
+ }
             />
           </Routes>
         </div>

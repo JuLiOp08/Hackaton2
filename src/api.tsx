@@ -85,7 +85,71 @@ export async function getExpensesDetail(
   }
 }
 
+export async function addExpense(
+  token: string,
+  expense: {
+    year: number;
+    month: number;
+    categoryId: number;
+    amount: number;
+    description: string;
+  }
+) {
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/expenses`,
+      expense,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { success: true, data: response.data };
+  } catch (error: unknown) {
+    let errorMessage = "No se pudo agregar el gasto";
+    if (error && typeof error === "object" && "response" in error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      errorMessage = err.response?.data?.message || errorMessage;
+    }
+    return { success: false, error: errorMessage };
+  }
+}
 
+export async function deleteExpense(
+  token: string,
+  expenseId: number
+) {
+  try {
+    const response = await axios.delete(
+      `${BACKEND_URL}/expenses/${expenseId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { success: true, data: response.data };
+  } catch (error: unknown) {
+    let errorMessage = "No se pudo eliminar el gasto";
+    if (error && typeof error === "object" && "response" in error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      errorMessage = err.response?.data?.message || errorMessage;
+    }
+    return { success: false, error: errorMessage };
+  }
+}
 
-
-
+export async function getCategories(token: string) {
+  try {
+    const response = await axios.get(`${BACKEND_URL}/expenses_category`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { success: true, data: response.data };
+  } catch (error: unknown) {
+    console.error("Error al obtener las categorías:", error);
+    return { success: false, error: "No se pudieron obtener las categorías" };
+  }
+}
