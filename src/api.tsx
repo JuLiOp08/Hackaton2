@@ -60,11 +60,14 @@ export async function getExpensesSummary(token: string) {
 }
 
 export async function getExpensesDetail(
-  token: string, 
-  expenseId: string
+  token: string,
+  year: number,
+  month: number,
+  categoryId: number
 ) {
   try {
-    const response = await axios.get(`${BACKEND_URL}/expenses/${expenseId}`,
+    const response = await axios.get(
+      `${BACKEND_URL}/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -94,7 +97,7 @@ export async function addExpense(
 ) {
   try {
     const response = await axios.post(
-      `${BACKEND_URL}/expenses`,
+      `${BACKEND_URL}/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
       expense,
       {
         headers: {
@@ -115,11 +118,11 @@ export async function addExpense(
 
 export async function deleteExpense(
   token: string,
-  expenseId: number
+  id: number
 ) {
   try {
     const response = await axios.delete(
-      `${BACKEND_URL}/expenses/${expenseId}`,
+      `${BACKEND_URL}/expenses/:${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

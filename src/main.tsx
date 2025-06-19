@@ -13,7 +13,6 @@ import AddExpense from "./pages/AddExpense.tsx";
 import DeleteExpense from "./pages/DeleteExpense.tsx";
 import ExpenseCategories from "./pages/ExpenseCategories.tsx";
 
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TokenProvider>
@@ -21,23 +20,18 @@ createRoot(document.getElementById("root")!).render(
         <Navbar />
         <div className="pt-16">
           <Routes>
- <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route
- path="/"
+              path="/expenses_summary"
               element={
                 <ProtectedRoute>
                   <ExpensesSummary />
                 </ProtectedRoute>
               }
             />
- <Route path="/summary" element={
- <ProtectedRoute>
- <ExpensesSummary />
- </ProtectedRoute>
- } />
             <Route
- path="/expenses/:id"
+              path="/expenses_detail"
               element={
                 <ProtectedRoute>
                   <ExpensesDetail />
@@ -45,22 +39,29 @@ createRoot(document.getElementById("root")!).render(
               }
             />            
             <Route
- path="/add-expense"
+              path={`/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`}
               element={
                 <ProtectedRoute>
                   <AddExpense />
                 </ProtectedRoute>
               }
             />
- <Route path="/delete-expense" element={<ProtectedRoute><DeleteExpense /></ProtectedRoute>} />
             <Route
-              path="/expense_categories"
+              path={`/expenses/${id}`}
               element={
- <ProtectedRoute>
- <ExpenseCategories />
- </ProtectedRoute>
- }
+                <ProtectedRoute>
+                  <DeleteExpense />
+                </ProtectedRoute>
+              }
             />
+            <Route
+              path="/expenses_category"
+              element={
+                <ProtectedRoute>
+                  <ExpenseCategories />
+                </ProtectedRoute>
+              }
+              />
           </Routes>
         </div>
       </BrowserRouter>
