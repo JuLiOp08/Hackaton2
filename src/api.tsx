@@ -10,8 +10,14 @@ export function useSignup() {
     try {
       const response = await axios.post(`${BACKEND_URL}/authentication/register`, user);
       return { success: true, token: response.data.token };
-    } catch (error: any) {
-      return { success: false, error: "Error al registrar el usuario" };
+    } catch (error: unknown) {
+      console.error("Error al registrar el usuario:", error);
+      let errorMessage = "Error al registrar el usuario";
+      if (error && typeof error === "object" && "response" in error) {
+        const err = error as { response?: { data?: { message?: string } } };
+        errorMessage = err.response?.data?.message || errorMessage;
+      }
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -27,6 +33,7 @@ export function useLogin() {
 
       return { success: true, token: response.data.result.token };
     } catch (error) {
+      console.error("Error during login:", error);
       return { success: false, error: "Usuario o contraseña incorrecta" };
     }
   };
@@ -37,7 +44,7 @@ export function useLogin() {
 export async function getExpensesSummary(token: string) {
   try {
     const response = await axios.get(
-      "http://198.211.105.95:8080/expenses_summary",
+      `${BACKEND_URL}/expenses_summary`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,7 +53,8 @@ export async function getExpensesSummary(token: string) {
     );
     console.log(response.data.token)
     return { success: true, data: response.data };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error("Error al obtener el resumen de gastos:", error);
     return { success: false, error: "No se pudo obtener el resumen de gastos" };
   }
 }
@@ -59,7 +67,7 @@ export async function getExpensesDetail(
 ) {
   try {
     const response = await axios.get(
-      `http://198.211.105.95:8080/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
+      `${BACKEND_URL}/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -67,8 +75,13 @@ export async function getExpensesDetail(
       }
     );
     return { success: true, data: response.data };
-  } catch (error: any) {
-    return { success: false, error: "No se pudo obtener el detalle de gastos" };
+  } catch (error: unknown) {
+    let errorMessage = "No se pudo obtener el detalle de gastos";
+    if (error && typeof error === "object" && "response" in error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      errorMessage = err.response?.data?.message || errorMessage;
+    }
+    return { success: false, error: errorMessage };
   }
 }
 
