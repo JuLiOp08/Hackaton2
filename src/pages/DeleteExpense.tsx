@@ -31,13 +31,14 @@ const DeleteExpense: React.FC = () => {
 
       try {
         setLoading(true);
-        console.log("TOKEN ENVIADO:", token);
-        const response = await axios.get(`${BACKEND_URL}/expenses`, {
+        //console.log("TOKEN ENVIADO:", token);
+        const response = await axios.get(`${BACKEND_URL}/expenses_summary`, {
            headers: { Authorization: `Bearer ${token}` }
         });
         setExpenses(response.data);
         setError(null);
       } catch (err) {
+        console.error("error en el get pre delete", err);
         setError('Error fetching expenses.');
         console.error(err);
       } finally {
@@ -58,6 +59,7 @@ const DeleteExpense: React.FC = () => {
       await axios.delete(`${BACKEND_URL}/expenses/${selectedExpenseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("token:", token);
       setExpenses(expenses.filter(exp => exp.id !== selectedExpenseId));
       setSelectedExpenseId(null);
     } catch (err) {
@@ -93,7 +95,7 @@ const DeleteExpense: React.FC = () => {
                 {expense.expenseCategory.name}
               </span>
               <button
-                onClick={() => setSelectedExpenseId(expense.id)}
+                onClick={() => setSelectedExpenseId(selectedExpenseId === expense.id ? null : expense.id)}
                 className="ml-4 text-sm text-[#8B4C4C] hover:underline"
               >
                 {selectedExpenseId === expense.id ? 'Seleccionado' : 'Seleccionar'}
@@ -106,7 +108,7 @@ const DeleteExpense: React.FC = () => {
       <button
         onClick={handleDelete}
         disabled={!selectedExpenseId}
-        className={`mt-6 w-full bg-[#8B4C4C] text-white py-2 px-4 rounded hover:bg-[#a85d5d] transition ${
+        className={`mt-6 w-full bg-[red] text-gray py-2 px-4 rounded hover:bg-[#a85d5d] transition ${
           !selectedExpenseId ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >

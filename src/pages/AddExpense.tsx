@@ -11,7 +11,7 @@ const AddExpense: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    categoryId: "",
+    categoryId: 0, // Cambia a number
     date: "",
     amount: "",
     description: "",
@@ -36,7 +36,11 @@ const AddExpense: React.FC = () => {
   }, [token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "categoryId" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,19 +61,17 @@ const AddExpense: React.FC = () => {
       return;
     }
 
-    const [year, month] = formData.date.split("-");
+    // Construir el body correcto para el backend
     const expense = {
-      year: Number(year),
-      month: Number(month),
-      categoryId: Number(formData.categoryId),
       amount: Number(formData.amount),
-      description: formData.description,
+      category: { id: formData.categoryId },
+      date: formData.date,
     };
 
     const result = await addExpense(token, expense);
     if (result.success) {
       setSuccessMessage("✅ Gasto agregado correctamente.");
-      setFormData({ categoryId: "", date: "", amount: "", description: "" });
+      setFormData({ categoryId: 0, date: "", amount: "", description: "" });
     } else {
       setAddExpenseError(result.error || "Error al agregar el gasto.");
     }
@@ -155,7 +157,7 @@ const AddExpense: React.FC = () => {
           <button
             type="submit"
             disabled={addingExpense}
-            className="w-full bg-[#8B4C4C] text-white rounded px-4 py-2 font-semibold hover:bg-[#a85d5d] transition-colors"
+            className="w-full bg-[#8B4C4C] text-gray rounded px-4 py-2 font-semibold hover:bg-[#a85d5d] transition-colors"
           >
             {addingExpense ? "Agregando..." : "Agregar Gasto"}
           </button>

@@ -88,11 +88,9 @@ export async function getExpensesDetail(
 export async function addExpense(
   token: string,
   expense: {
-    year: number;
-    month: number;
-    categoryId: number;
     amount: number;
-    description: string;
+    category: { id: number };
+    date: string;
   }
 ) {
   try {
@@ -126,6 +124,7 @@ export async function deleteExpense(token: string, expenseId: number) {
         },
       }
     );
+    console.log("token enviado:", token);
     return { success: true, data: response.data };
   } catch (error: unknown) {
     let errorMessage = "No se pudo eliminar el gasto";
