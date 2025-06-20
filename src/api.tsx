@@ -87,9 +87,8 @@ export async function addExpense(
   }
 ) {
   try {
-    const { year, month, categoryId } = expense;
     const response = await axios.post(
-      `${BACKEND_URL}/expenses/detail?year=${year}&month=${month}&categoryId=${categoryId}`,
+      `${BACKEND_URL}/expenses`,
       expense,
       {
         headers: {
@@ -108,13 +107,10 @@ export async function addExpense(
   }
 }
 
-export async function deleteExpense(
-  token: string,
-  id: number
-) {
+export async function deleteExpense(token: string, expenseId: number) {
   try {
     const response = await axios.delete(
-      `${BACKEND_URL}/expenses/:${id}`,
+      `${BACKEND_URL}/expenses/${expenseId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -132,7 +128,7 @@ export async function deleteExpense(
   }
 }
 
-export async function getCategories(token: string) {
+export async function getExpenseCategories(token: string) {
   try {
     const response = await axios.get(`${BACKEND_URL}/expenses_category`, {
       headers: {
@@ -141,7 +137,12 @@ export async function getCategories(token: string) {
     });
     return { success: true, data: response.data };
   } catch (error: unknown) {
-    console.error("Error al obtener las categorías:", error);
-    return { success: false, error: "No se pudieron obtener las categorías" };
+    let errorMessage = "No se pudieron obtener las categorías de gastos";
+    if (error && typeof error === "object" && "response" in error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      errorMessage = err.response?.data?.message || errorMessage;
+    }
+    return { success: false, error: errorMessage };
   }
 }
+
