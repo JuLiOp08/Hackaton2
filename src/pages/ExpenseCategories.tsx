@@ -23,7 +23,6 @@ const ExpenseCategories: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Para el formulario de búsqueda
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -31,7 +30,6 @@ const ExpenseCategories: React.FC = () => {
   const [searchError, setSearchError] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
 
-  // Tab control
   const [tab, setTab] = useState<number>(TAB_SEARCH);
 
   useEffect(() => {
@@ -85,32 +83,26 @@ const ExpenseCategories: React.FC = () => {
     return <div className="flex justify-center items-center h-screen text-red-600 font-semibold">{error}</div>;
   }
 
-  // Divide las categorías en dos columnas para el panel pequeño
-  const mid = Math.ceil(categories.length / 2);
-  const col1 = categories.slice(0, mid);
-  const col2 = categories.slice(mid);
-
   return (
-    <div className="flex min-h-screen bg-[#8B4C4C]">
-      {/* Contenido principal */}
-      <div className="flex-1 flex flex-col items-center py-12 px-2">
-        {/* Tabs */}
-        <div className="flex mb-8 space-x-2">
+    <div className="flex min-h-screen bg-[#8B4C4C] justify-center px-4 py-12">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl border border-[#cfa7a7]">
+        {/* Tabs dentro del cuadro blanco */}
+        <div className="flex justify-center mb-6 space-x-4">
           <button
-            className={`px-6 py-2 rounded-t-lg font-semibold transition-colors ${
+            className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
               tab === TAB_SEARCH
-                ? 'bg-white text-[#8B4C4C] border-b-2 border-[#8B4C4C]'
-                : 'bg-[#e7bcbc] text-[#8B4C4C] hover:bg-white'
+                ? 'bg-[#8B4C4C] text-white'
+                : 'bg-[#d6a6a6] text-black hover:bg-[#f2e6e6]'
             }`}
             onClick={() => setTab(TAB_SEARCH)}
           >
             Buscar detalle
           </button>
           <button
-            className={`px-6 py-2 rounded-t-lg font-semibold transition-colors ${
+            className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
               tab === TAB_CATEGORIES
-                ? 'bg-white text-[#8B4C4C] border-b-2 border-[#8B4C4C]'
-                : 'bg-[#e7bcbc] text-[#8B4C4C] hover:bg-white'
+                ? 'bg-[#8B4C4C] text-white'
+                : 'bg-[#d6a6a6] text-black hover:bg-[#f2e6e6]'
             }`}
             onClick={() => setTab(TAB_CATEGORIES)}
           >
@@ -118,10 +110,10 @@ const ExpenseCategories: React.FC = () => {
           </button>
         </div>
 
-        {/* Página de búsqueda */}
+        {/* Formulario de búsqueda */}
         {tab === TAB_SEARCH && (
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl mb-8 border border-[#cfa7a7]">
-            <h3 className="text-xl font-semibold mb-4 text-center text-[#8B4C4C]">Buscar detalle de gastos</h3>
+          <>
+            <h3 className="text-2xl font-bold text-black mb-6 text-center">Buscar detalle de gastos</h3>
             <form className="flex flex-col gap-4" onSubmit={handleSearch}>
               <div className="flex flex-col sm:flex-row gap-4">
                 <input
@@ -129,7 +121,7 @@ const ExpenseCategories: React.FC = () => {
                   min="2000"
                   max="2100"
                   placeholder="Año (YYYY)"
-                  className="border rounded px-3 py-2 w-full border-[#cfa7a7] focus:ring-2 focus:ring-[#8B4C4C]"
+                  className="border rounded px-4 py-2 w-full border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] focus:ring-2 focus:ring-[#8B4C4C]"
                   value={year}
                   onChange={e => setYear(e.target.value)}
                 />
@@ -138,12 +130,12 @@ const ExpenseCategories: React.FC = () => {
                   min="1"
                   max="12"
                   placeholder="Mes (MM)"
-                  className="border rounded px-3 py-2 w-full border-[#cfa7a7] focus:ring-2 focus:ring-[#8B4C4C]"
+                  className="border rounded px-4 py-2 w-full border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] focus:ring-2 focus:ring-[#8B4C4C]"
                   value={month}
                   onChange={e => setMonth(e.target.value)}
                 />
                 <select
-                  className="border rounded px-3 py-2 w-full border-[#cfa7a7] focus:ring-2 focus:ring-[#8B4C4C]"
+                  className="border rounded px-4 py-2 w-full border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] focus:ring-2 focus:ring-[#8B4C4C]"
                   value={categoryId}
                   onChange={e => setCategoryId(e.target.value)}
                 >
@@ -155,70 +147,66 @@ const ExpenseCategories: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="bg-[#8B4C4C] text-black rounded px-4 py-2 font-semibold hover:bg-[#a85d5d] transition-colors"
+                className="bg-[#8B4C4C] text-white rounded px-4 py-2 font-semibold hover:bg-[#a85d5d] transition-colors"
                 disabled={searching}
               >
                 {searching ? 'Buscando...' : 'Buscar'}
               </button>
             </form>
             {searchError && <div className="text-red-600 mt-2 text-center">{searchError}</div>}
-          </div>
+          </>
         )}
 
-        {/* Página de categorías: ahora SIEMPRE centrada */}
+        {/* Tabla de categorías */}
         {tab === TAB_CATEGORIES && (
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl mb-8 border border-[#cfa7a7]">
-            <h2 className="text-2xl font-bold mb-6 text-center text-[#8B4C4C]">Categorías de gastos</h2>
-            <div className="grid grid-cols-2 gap-2">
-              <ul className="space-y-2">
-                {col1.map((category) => (
-                  <li
-                    key={category.id}
-                    className="py-2 px-4 bg-[#f7eaea] rounded hover:bg-[#e7bcbc] transition-colors text-[#8B4C4C] text-center"
-                  >
-                    {category.name}
-                  </li>
-                ))}
-              </ul>
-              <ul className="space-y-2">
-                {col2.map((category) => (
-                  <li
-                    key={category.id}
-                    className="py-2 px-4 bg-[#f7eaea] rounded hover:bg-[#e7bcbc] transition-colors text-[#8B4C4C] text-center"
-                  >
-                    {category.name}
-                  </li>
-                ))}
-              </ul>
+          <>
+            <h2 className="text-2xl font-bold text-black mb-6 text-center">Categorías de gastos</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white border border-[#cfa7a7] rounded-lg shadow">
+                <thead>
+                  <tr className="bg-[#8B4C4C] text-white">
+                    <th className="py-3 px-6 border border-[#cfa7a7] text-left text-lg font-semibold">#</th>
+                    <th className="py-3 px-6 border border-[#cfa7a7] text-left text-lg font-semibold">Categoría</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categories.map((category, index) => (
+                    <tr key={category.id} className="hover:bg-[#fbeaea] text-black">
+                      <td className="py-2 px-6 border border-[#cfa7a7]">{index + 1}</td>
+                      <td className="py-2 px-6 border border-[#cfa7a7]">{category.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </div>
+          </>
         )}
 
         {/* Resultados */}
         {tab === TAB_SEARCH && details && (
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-3xl border border-[#cfa7a7]">
+          <div className="bg-white rounded-lg shadow-lg p-6 mt-8 border border-[#cfa7a7]">
             <h4 className="text-lg font-bold mb-4 text-[#8B4C4C] text-center">Detalle de gastos</h4>
             {details.length > 0 ? (
               <table className="w-full border">
                 <thead>
-                  <tr className="bg-[#f7eaea]">
-                    <th className="p-2 border border-[#cfa7a7]">Fecha</th>
-                    <th className="p-2 border border-[#cfa7a7]">Categoría</th>
-                    <th className="p-2 border border-[#cfa7a7]">Monto</th>
+                  <tr className="bg-[#8B4C4C] text-white">
+                    <th className="p-2 border border-[#a86b6b]">Fecha</th>
+                    <th className="p-2 border border-[#a86b6b]">Categoría</th>
+                    <th className="p-2 border border-[#a86b6b]">Monto</th>
                   </tr>
                 </thead>
                 <tbody>
                   {details.map(item => (
-                    <tr key={item.id} className="hover:bg-[#fbeaea]">
-                      <td className="p-2 border border-[#cfa7a7]">{item.date}</td>
-                      <td className="p-2 border border-[#cfa7a7]">{item.category.name}</td>
-                      <td className="p-2 border border-[#cfa7a7]">S/ {item.amount.toFixed(2)}</td>
+                    <tr key={item.id} className="bg-[#f7eaea] text-black">
+                      <td className="p-2 border border-[#a86b6b]">{item.date}</td>
+                      <td className="p-2 border border-[#a86b6b]">{item.category.name}</td>
+                      <td className="p-2 border border-[#a86b6b]">S/ {item.amount.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <div className="text-center text-gray-500">No hay gastos para esos parámetros.</div>
+              <div className="text-center text-gray-800">No hay gastos para esos parámetros.</div>
             )}
           </div>
         )}

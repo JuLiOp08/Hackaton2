@@ -19,11 +19,16 @@ const AddExpense: React.FC = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      if (!token) return;
+      if (!token) {
+        setAddExpenseError("Token no disponible.");
+        return;
+      }
       setLoadingCategories(true);
       const result = await getCategories(token);
       if (result.success) {
         setCategories(result.data);
+      } else {
+        setAddExpenseError("No se pudieron cargar las categorías.");
       }
       setLoadingCategories(false);
     };
@@ -40,7 +45,6 @@ const AddExpense: React.FC = () => {
     setSuccessMessage(null);
     setAddingExpense(true);
 
-    // Validación simple
     if (!formData.categoryId || !formData.date || !formData.amount) {
       setAddExpenseError("Completa todos los campos.");
       setAddingExpense(false);
@@ -53,7 +57,6 @@ const AddExpense: React.FC = () => {
       return;
     }
 
-    // Parsear año y mes de la fecha
     const [year, month] = formData.date.split("-");
     const expense = {
       year: Number(year),
@@ -65,13 +68,8 @@ const AddExpense: React.FC = () => {
 
     const result = await addExpense(token, expense);
     if (result.success) {
-      setSuccessMessage("Gasto agregado correctamente.");
-      setFormData({
-        categoryId: "",
-        date: "",
-        amount: "",
-        description: "",
-      });
+      setSuccessMessage("✅ Gasto agregado correctamente.");
+      setFormData({ categoryId: "", date: "", amount: "", description: "" });
     } else {
       setAddExpenseError(result.error || "Error al agregar el gasto.");
     }
@@ -79,74 +77,93 @@ const AddExpense: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
-      <h2 className="text-xl font-bold mb-4 text-[#8B4C4C]">Agregar Gasto</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="categoryId">Categoría:</label>
-          {loadingCategories ? (
-            <div>Cargando categorías...</div>
-          ) : (
-            <select
-              id="categoryId"
-              name="categoryId"
-              value={formData.categoryId}
+    <div className="flex justify-center bg-[#8B4C4C] min-h-screen py-12 px-4">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg border border-[#cfa7a7]">
+        <h2 className="text-2xl font-bold text-center text-[#8B4C4C] mb-6">Agregar Gasto</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="categoryId">
+              Categoría:
+            </label>
+            {loadingCategories ? (
+              <div className="text-gray-600">Cargando categorías...</div>
+            ) : (
+              <select
+                id="categoryId"
+                name="categoryId"
+                value={formData.categoryId}
+                onChange={handleChange}
+                required
+                className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+              >
+                <option value="">Selecciona una categoría</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="date">
+              Fecha:
+            </label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
               onChange={handleChange}
               required
-              className="w-full border rounded px-2 py-1"
-            >
-              <option value="">Selecciona una categoría</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>{category.name}</option>
-              ))}
-            </select>
-          )}
-        </div>
-        <div>
-          <label htmlFor="date">Fecha:</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-            className="w-full border rounded px-2 py-1"
-          />
-        </div>
-        <div>
-          <label htmlFor="amount">Monto:</label>
-          <input
-            type="number"
-            id="amount"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            required
-            className="w-full border rounded px-2 py-1"
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Descripción:</label>
-          <input
-            type="text"
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="w-full border rounded px-2 py-1"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={addingExpense}
-          className="bg-[#8B4C4C] text-black px-4 py-2 rounded hover:bg-[#a85d5d]"
-        >
-          {addingExpense ? "Agregando..." : "Agregar Gasto"}
-        </button>
-      </form>
-      {addExpenseError && <div className="text-red-600 mt-2">{addExpenseError}</div>}
-      {successMessage && <div className="text-green-600 mt-2">{successMessage}</div>}
+              className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="amount">
+              Monto:
+            </label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              required
+              className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="description">
+              Descripción:
+            </label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+              placeholder="Opcional"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={addingExpense}
+            className="w-full bg-[#8B4C4C] text-white rounded px-4 py-2 font-semibold hover:bg-[#a85d5d] transition-colors"
+          >
+            {addingExpense ? "Agregando..." : "Agregar Gasto"}
+          </button>
+        </form>
+
+        {addExpenseError && <div className="text-red-600 mt-4 text-center">{addExpenseError}</div>}
+        {successMessage && <div className="text-green-600 mt-4 text-center">{successMessage}</div>}
+      </div>
     </div>
   );
 };
