@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../api';
+import { useToken } from '../contexts/TokenContext';
 
 interface Expense {
-  id: string;
+  id: number;
   expenseCategory: {
     id: number;
     name: string;
@@ -13,8 +15,9 @@ interface Expense {
 }
 
 const DeleteExpense: React.FC = () => {
+  const { token } = useToken();
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(null);
+  const [selectedExpenseId, setSelectedExpenseId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +25,9 @@ const DeleteExpense: React.FC = () => {
     const fetchExpenses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/expenses');
+        const response = await axios.get(`${BACKEND_URL}/expenses`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setExpenses(response.data);
       } catch (err) {
         setError('Error fetching expenses.');
@@ -32,8 +37,8 @@ const DeleteExpense: React.FC = () => {
       }
     };
 
-    fetchExpenses();
-  }, []);
+    if (token) fetchExpenses();
+  }, [token]);
 
   const handleDelete = async () => {
     if (!selectedExpenseId) {
@@ -42,7 +47,9 @@ const DeleteExpense: React.FC = () => {
     }
 
     try {
-      await axios.delete(`/expenses/${selectedExpenseId}`, {}); // Ensure no request body is sent
+      await axios.delete(`${BACKEND_URL}/expenses/${selectedExpenseId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setExpenses(expenses.filter(exp => exp.id !== selectedExpenseId));
       setSelectedExpenseId(null);
     } catch (err) {
@@ -67,7 +74,8 @@ const DeleteExpense: React.FC = () => {
       ) : (
         <ul>
           {expenses.map(expense => (
-            <li key={expense.id}> ${expense.amount.toFixed(2)} - {expense.month} - {expense.year}
+            <li key={expense.id}>
+              S/ {expense.amount.toFixed(2)} - {expense.month} - {expense.year}
               <button onClick={() => setSelectedExpenseId(expense.id)}>
                 {selectedExpenseId === expense.id ? 'Selected' : 'Select'}
               </button>

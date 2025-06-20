@@ -47,7 +47,7 @@ createRoot(document.getElementById("root")!).render(
               }
             />
             <Route
-              path="/expenses/:id"
+              path="/expenses"
               element={
                 <ProtectedRoute>
                   <DeleteExpense />
