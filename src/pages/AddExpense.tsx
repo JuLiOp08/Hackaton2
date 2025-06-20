@@ -1,151 +1,169 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { BACKEND_URL } from '../api';
-import { useToken } from '../contexts/TokenContext';
-
-interface ExpenseFormState {
-  amount: number | null;
-  category: { id: number | null };
-  date: string;
-}
-
-interface Category {
-  id: number;
-  name: string;
-}
+import React, { useState, useEffect } from "react";
+import { getCategories, addExpense } from "../api";
+import { useToken } from "../contexts/TokenContext";
 
 const AddExpense: React.FC = () => {
   const { token } = useToken();
-  const [formData, setFormData] = useState<ExpenseFormState>({
-    amount: 0,
-    category: { id: null },
-    date: ''
-  });
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
   const [addingExpense, setAddingExpense] = useState(false);
   const [addExpenseError, setAddExpenseError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      setAddingExpense(true);
-      setAddExpenseError(null);
-      setSuccessMessage(null);
-
-      await axios.post(`${BACKEND_URL}/expenses`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      setFormData({
-        amount: 0,
-        category: { id: null },
-        date: '',
-      });
-
-      setSuccessMessage('Expense added successfully!');
-    } catch (error: any) {
-      console.error('Error adding expense:', error);
-      if (error.response) {
-        setAddExpenseError(`Error: ${error.response.status} - ${error.response.data.message || 'Something went wrong'}`);
-      } else if (error.request) {
-        setAddExpenseError('Error: No response from server.');
-      } else {
-        setAddExpenseError('Error: Could not send request.');
-      }
-    } finally {
-      setAddingExpense(false);
-    }
-  };
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = parseFloat(e.target.value);
-    setFormData({ ...formData, amount: isNaN(amount) ? null : amount });
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const categoryId = parseInt(e.target.value, 10);
-    setFormData({ ...formData, category: { id: categoryId } });
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, date: e.target.value });
-  };
+  const [formData, setFormData] = useState({
+    categoryId: "",
+    date: "",
+    amount: "",
+    description: "",
+  });
 
   useEffect(() => {
     const fetchCategories = async () => {
-      setLoadingCategories(true);
-      setAddExpenseError(null);
-      try {
-        const response = await axios.get<Category[]>(`${BACKEND_URL}/expenses_category`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setCategories(response.data);
-      } catch (err) {
-        setAddExpenseError('Error fetching categories.');
-      } finally {
-        setLoadingCategories(false);
+      if (!token) {
+        setAddExpenseError("Token no disponible.");
+        return;
       }
+      setLoadingCategories(true);
+      const result = await getCategories(token);
+      if (result.success) {
+        setCategories(result.data);
+      } else {
+        setAddExpenseError("No se pudieron cargar las categorías.");
+      }
+      setLoadingCategories(false);
     };
     fetchCategories();
   }, [token]);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddExpenseError(null);
+    setSuccessMessage(null);
+    setAddingExpense(true);
+
+    if (!formData.categoryId || !formData.date || !formData.amount) {
+      setAddExpenseError("Completa todos los campos.");
+      setAddingExpense(false);
+      return;
+    }
+
+    if (!token) {
+      setAddExpenseError("No hay token de autenticación.");
+      setAddingExpense(false);
+      return;
+    }
+
+    const [year, month] = formData.date.split("-");
+    const expense = {
+      year: Number(year),
+      month: Number(month),
+      categoryId: Number(formData.categoryId),
+      amount: Number(formData.amount),
+      description: formData.description,
+    };
+
+    const result = await addExpense(token, expense);
+    if (result.success) {
+      setSuccessMessage("✅ Gasto agregado correctamente.");
+      setFormData({ categoryId: "", date: "", amount: "", description: "" });
+    } else {
+      setAddExpenseError(result.error || "Error al agregar el gasto.");
+    }
+    setAddingExpense(false);
+  };
+
   return (
-    <div>
-      <h2>Add New Expense</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="amount">Amount:</label>
-          <input
-            type="number"
-            id="amount"
-            name="amount"
-            value={formData.amount ?? ''}
-            onChange={handleAmountChange}
-            required
-          />
-        </div>
+    <div className="flex justify-center bg-[#8B4C4C] min-h-screen py-12 px-4">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg border border-[#cfa7a7]">
+        <h2 className="text-2xl font-bold text-center text-[#8B4C4C] mb-6">Agregar Gasto</h2>
 
-        <div>
-          <label htmlFor="category">Category:</label>
-          {loadingCategories ? (
-            <p>Loading categories...</p>
-          ) : (
-            <select
-              id="category"
-              name="category"
-              value={formData.category.id ?? ''}
-              onChange={handleCategoryChange}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="categoryId">
+              Categoría:
+            </label>
+            {loadingCategories ? (
+              <div className="text-gray-600">Cargando categorías...</div>
+            ) : (
+              <select
+                id="categoryId"
+                name="categoryId"
+                value={formData.categoryId}
+                onChange={handleChange}
+                required
+                className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+              >
+                <option value="">Selecciona una categoría</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="date">
+              Fecha:
+            </label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
               required
-            >
-              <option value="">Select Category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>{category.name}</option>
-              ))}
-            </select>
-          )}
-        </div>
+              className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="date">Date:</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleDateChange}
-            required
-          />
-        </div>
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="amount">
+              Monto:
+            </label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              required
+              className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+            />
+          </div>
 
-        <button type="submit" disabled={addingExpense}>
-          {addingExpense ? 'Adding Expense...' : 'Add Expense'}
-        </button>
-      </form>
+          <div>
+            <label className="block mb-1 font-semibold text-[#8B4C4C]" htmlFor="description">
+              Descripción:
+            </label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full border border-[#8B4C4C] bg-[#f7eaea] text-[#8B4C4C] rounded px-4 py-2 focus:ring-2 focus:ring-[#8B4C4C]"
+              placeholder="Opcional"
+            />
+          </div>
 
-      {addExpenseError && <p style={{ color: 'red' }}>{addExpenseError}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          <button
+            type="submit"
+            disabled={addingExpense}
+            className="w-full bg-[#8B4C4C] text-white rounded px-4 py-2 font-semibold hover:bg-[#a85d5d] transition-colors"
+          >
+            {addingExpense ? "Agregando..." : "Agregar Gasto"}
+          </button>
+        </form>
+
+        {addExpenseError && <div className="text-red-600 mt-4 text-center">{addExpenseError}</div>}
+        {successMessage && <div className="text-green-600 mt-4 text-center">{successMessage}</div>}
+      </div>
     </div>
   );
 };
