@@ -25,8 +25,9 @@ const DeleteExpense: React.FC = () => {
     const fetchExpenses = async () => {
       try {
         setLoading(true);
+        console.log("TOKEN ENVIADO:", token); // <-- Agrega esto
         const response = await axios.get(`${BACKEND_URL}/expenses`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: token }
         });
         setExpenses(response.data);
       } catch (err) {

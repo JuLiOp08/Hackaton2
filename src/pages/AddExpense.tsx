@@ -140,7 +140,7 @@ const AddExpense: React.FC = () => {
         <button
           type="submit"
           disabled={addingExpense}
-          className="bg-[#8B4C4C] text-white px-4 py-2 rounded hover:bg-[#a85d5d]"
+          className="bg-[#8B4C4C] text-black px-4 py-2 rounded hover:bg-[#a85d5d]"
         >
           {addingExpense ? "Agregando..." : "Agregar Gasto"}
         </button>

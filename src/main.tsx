@@ -13,6 +13,7 @@ import AddExpense from "./pages/AddExpense.tsx";
 import DeleteExpense from "./pages/DeleteExpense.tsx";
 import ExpenseCategories from "./pages/ExpenseCategories.tsx";
 
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TokenProvider>
@@ -62,6 +63,22 @@ createRoot(document.getElementById("root")!).render(
                 </ProtectedRoute>
               }
               />
+            <Route
+              path="/add-expense"
+              element={
+                <ProtectedRoute>
+                  <AddExpense />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/delete-expense"
+              element={
+                <ProtectedRoute>
+                  <DeleteExpense />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </BrowserRouter>
