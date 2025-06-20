@@ -3,24 +3,15 @@ import axios from "axios";
 export const BACKEND_URL = "http://198.211.105.95:8080";
 
 export function useSignup() {
-  const register = async (user: {
-    email: string;
-    passwd: string;
-  }) => {
+  const register = async (user: { email: string; passwd: string }) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/authentication/register`, user);
       return { success: true, token: response.data.token };
-    } catch (error: unknown) {
-      console.error("Error al registrar el usuario:", error);
-      let errorMessage = "Error al registrar el usuario";
-      if (error && typeof error === "object" && "response" in error) {
-        const err = error as { response?: { data?: { message?: string } } };
-        errorMessage = err.response?.data?.message || errorMessage;
-      }
-      return { success: false, error: errorMessage };
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Error al registrar el usuario";
+      return { success: false, error: message };
     }
   };
-
   return { register };
 }
 
